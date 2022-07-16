@@ -52,7 +52,7 @@ while 1 == 1:
         hbpdpercent = round(hbpdpercent, 3)
         if hbpdpercent > 0.0001:
             print('huobi - binance btcusdt spread is ' +
-                  str(hbpdpercent) + '%')
+                  str(hbpdpercent) + '%!')
             bot.send_message(492639112, 'huobi - binance btcusdt spread is ' +
                              str(hbpdpercent) + '%', parse_mode='html')
     else:
@@ -63,4 +63,6 @@ while 1 == 1:
             print('binance - huobi btcusdt spread is ' +
                   str(hbpdpercent) + '%')
             bot.send_message(492639112, 'binance - huobi btcusdt spread is ' +
-                             str(hbpdpercent) + '%', parse_mode='html')
+                             str(hbpdpercent) + '%!', parse_mode='html')
+
+bot.polling(non_stop=True)
