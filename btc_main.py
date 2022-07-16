@@ -43,9 +43,10 @@ class Price:    # the class recieves pair name and link for api requests to retu
 
 def compare(ticker, exchange, arg1, arg2):    # function to compare prices
     percent = round(abs(arg1-arg2) / arg1 * 100, 3)
-    if percent > 0.001:
+    if percent > 0.0001:
         print(ticker + ' ' + exchange + ' ' + str(percent) + '%')
-        #bot.send_message(492639112, ticker + ' ' + exchange + ' ' + str(percent) + '%')
+        bot.send_message(492639112, ticker + ' ' +
+                         exchange + ' ' + str(percent) + '%')
 
 
 def alert_check(price):   # alert function
@@ -71,4 +72,4 @@ while True:
     compare('ETHUSDT', 'Binance-Huobi',
             beth.getprice_bin(), heth.getprice_huo())
     alert_check(bbtc.getprice_bin())
-    time.sleep(60)
+    time.sleep(10)
