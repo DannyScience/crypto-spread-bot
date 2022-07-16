@@ -5,6 +5,8 @@ bot = telebot.TeleBot('5542493071:AAGDxcIF-kKpFs8GuJCBeipr8DBHNCVlx3A')
 
 # obtaining BTC price from Binance
 
+bot.send_message(492639112, 'launching', parse_mode='html')
+
 
 def dbpbtc():
     url = 'https://fapi.binance.com/fapi/v1/ticker/price'
