@@ -1,70 +1,74 @@
 import requests
 import json
 import telebot
+import time
 bot = telebot.TeleBot('5542493071:AAGDxcIF-kKpFs8GuJCBeipr8DBHNCVlx3A')
-
-# obtaining BTC price from Binance
+bot2 = telebot.TeleBot('5517949323:AAGLO_ezhvbw_loJuOgtPOKi-6_2W2JJsTw')
 
 bot.send_message(492639112, 'launching', parse_mode='html')
 
 
-def dbpbtc():
-    url = 'https://fapi.binance.com/fapi/v1/ticker/price'
-    param = {'symbol': 'BTCUSDT'}
-    r = requests.get(url, params=param)
-    if r.status_code == 200:
-        # data = json.dumps(r.json()) - error
-        data = r.json()
-    else:
-        print('error')
-    bpbtc = float(data['price'])  # bpbtc = b -binance + p-price + btc - ticker
-    return bpbtc
+class Price:    # the class recieves pair name and link for api requests to return price using certain method
+    def __init__(self, pair, source):
+        self.pair = pair
+        self.source = source
+
+# get a price from binance
+    def getprice_bin(self):
+        url = self.source
+        param = {'symbol': self.pair}
+        r = requests.get(url, params=param)
+        if r.status_code == 200:
+            data = r.json()
+        else:
+            print('error')
+            # bpbtc = b -binance + p-price + btc - ticker
+        price = float(data['price'])
+        return price
+
+# get a price from huobi
+    def getprice_huo(self):
+        url = self.source
+        param = {'symbol': self.pair}
+        r = requests.get(url, params=param)
+        if r.status_code == 200:
+            data = r.json()
+        else:
+            print('error')
+        hpbtc0 = data['tick']
+        hpbtc00 = hpbtc0['bid']
+        price = float(hpbtc00[0])
+        return price
 
 
-bpbtc = dbpbtc()
-print(bpbtc)
+def compare(ticker, exchange, arg1, arg2):    # function to compare prices
+    percent = round(abs(arg1-arg2) / arg1 * 100, 3)
+    if percent > 0.001:
+        print(ticker + ' ' + exchange + ' ' + str(percent) + '%')
+        #bot.send_message(492639112, ticker + ' ' + exchange + ' ' + str(percent) + '%')
 
 
-# obtaining BTC price from Huobi
-def dhpbtc():
-    url2 = 'https://api.huobi.pro/market/detail/merged?symbol=btcusdt'
-    param = {'symbol': 'BTCUSDT'}
-    r2 = requests.get(url2, params=param)
-    if r2.status_code == 200:
-        data2 = r2.json()
-    else:
-        print('error2')
-    hpbtc0 = data2['tick']
-    hpbtc00 = hpbtc0['bid']
-    hpbtc = float(hpbtc00[0])
-    return hpbtc
+def alert_check(price):   # alert function
+    if price > 22500:
+        bot2.send_message(492639112, 'BTC above alert line!!!!!!!!!!!!!!!')
+    elif price < 18500:
+        bot2.send_message(492639112, 'BTC below alert line!!!!!!!!!!!!!!!')
 
 
-hpbtc = dhpbtc()
-print(hpbtc)
+# defining pairs and api links
+bbtc = Price('BTCUSDT', 'https://fapi.binance.com/fapi/v1/ticker/price')
+hbtc = Price(
+    'BTCUSDT', 'https://api.huobi.pro/market/detail/merged?symbol=btcusdt')
+beth = Price('ETHUSDT', 'https://fapi.binance.com/fapi/v1/ticker/price')
+heth = Price(
+    'ETHUSDT', 'https://api.huobi.pro/market/detail/merged?symbol=ethusdt')
 
 
-# compairing prices and counting a percent difference nonstop
-while 1 == 1:
-    bpbtc = dbpbtc()
-    hpbtc = dhpbtc()
-    if float(hpbtc) > float(bpbtc):
-        hbpd = hpbtc - bpbtc
-        hbpdpercent = hbpd / hpbtc * 100
-        hbpdpercent = round(hbpdpercent, 3)
-        if hbpdpercent > 0.06:
-            print('huobi - binance btcusdt spread is ' +
-                  str(hbpdpercent) + '%')
-            bot.send_message(492639112, 'huobi - binance btcusdt spread is ' +
-                             str(hbpdpercent) + '%', parse_mode='html')
-    else:
-        hbpd = bpbtc - hpbtc
-        hbpdpercent = hbpd / hpbtc * 100
-        hbpdpercent = round(hbpdpercent, 3)
-        if hbpdpercent > 0.05:
-            print('binance - huobi btcusdt spread is ' +
-                  str(hbpdpercent) + '%')
-            bot.send_message(492639112, 'binance - huobi btcusdt spread is ' +
-                             str(hbpdpercent) + '%', parse_mode='html')
-
-bot.polling(non_stop=True)
+# compairing process nonstop
+while True:
+    compare('BTCUSDT', 'Binance-Huobi',
+            bbtc.getprice_bin(), hbtc.getprice_huo())
+    compare('ETHUSDT', 'Binance-Huobi',
+            beth.getprice_bin(), heth.getprice_huo())
+    alert_check(bbtc.getprice_bin())
+    time.sleep(60)
