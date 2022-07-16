@@ -2,8 +2,10 @@ import requests
 import json
 import telebot
 import time
-bot = telebot.TeleBot('5542493071:AAGDxcIF-kKpFs8GuJCBeipr8DBHNCVlx3A')
-bot2 = telebot.TeleBot('5517949323:AAGLO_ezhvbw_loJuOgtPOKi-6_2W2JJsTw')
+import config
+
+bot = telebot.TeleBot(config.bot1tocken)
+bot2 = telebot.TeleBot(config.bot2tocken)
 
 bot.send_message(492639112, 'launching', parse_mode='html')
 
@@ -51,9 +53,9 @@ def compare(ticker, exchange, arg1, arg2):    # function to compare prices
 
 def alert_check(price):   # alert function
     if price > 22500:
-        bot2.send_message(492639112, 'BTC above alert line!!!!!!!!!!!!!!!')
+        bot2.send_message(492639112, 'BTC above alert line!')
     elif price < 18500:
-        bot2.send_message(492639112, 'BTC below alert line!!!!!!!!!!!!!!!')
+        bot2.send_message(492639112, 'BTC below alert line!')
 
 
 # defining pairs and api links
