@@ -58,6 +58,7 @@ while 1 == 1:
     else:
         hbpd = bpbtc - hpbtc
         hbpdpercent = hbpd / hpbtc * 100
+        hbpdpercent = round(hbpdpercent, 3)
         if hbpdpercent > 0.0001:
             print('binance - huobi btcusdt spread is ' +
                   str(hbpdpercent) + '%')
