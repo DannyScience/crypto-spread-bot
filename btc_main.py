@@ -3,6 +3,13 @@ import json
 import telebot
 bot = telebot.TeleBot('5542493071:AAGDxcIF-kKpFs8GuJCBeipr8DBHNCVlx3A')
 
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    mess = f'Hello, <b>{message.from_user.first_name}</b>'
+    bot.send_message(message.chat.id, mess, parse_mode='html')
+
+
 # obtaining BTC price from Binance
 
 
@@ -52,9 +59,9 @@ while 1 == 1:
         hbpdpercent = round(hbpdpercent, 3)
         if hbpdpercent > 0.0001:
             print('huobi - binance btcusdt spread is ' +
-                  str(hbpdpercent) + '%!')
+                  str(hbpdpercent) + '%')
             bot.send_message(492639112, 'huobi - binance btcusdt spread is ' +
-                             str(hbpdpercent) + '%', parse_mode='html')
+                             str(hbpdpercent) + '%!', parse_mode='html')
     else:
         hbpd = bpbtc - hpbtc
         hbpdpercent = hbpd / hpbtc * 100
