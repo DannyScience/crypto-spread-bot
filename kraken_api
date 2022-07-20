@@ -1,0 +1,16 @@
+import requests
+import json
+import telebot
+import time
+import config
+
+
+resp = requests.get('https://api.kraken.com/0/public/Ticker?pair=ADAUSDT')
+a = resp.json()
+b = a['result']
+c = b['ADAUSDT']
+d = c['a']
+e = d[0]
+
+
+print(e)
