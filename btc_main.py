@@ -59,7 +59,8 @@ def compare(arg1, arg2):    # function to compare prices
         percent = round(abs(arg1-arg2) / arg1 * 100, 3)
         if percent > 0.0001:
             print('ticker' + ' ' + 'exchange' + ' ' + str(percent) + '%')
-            #bot.send_message(492639112, ticker + ' ' + exchange + ' ' + str(percent) + '%')
+            bot.send_message(492639112, 'ticker' + ' ' +
+                             'exchange' + ' ' + str(percent) + '%')
 
 
 # alert triggers
